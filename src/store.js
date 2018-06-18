@@ -8,25 +8,83 @@ export default new Vuex.Store({
   state: {
     name: '',
     email: '',
+    loading: false,
+    uid: '',
+  },
+  getters: {
+    getLoading(state) {
+      return state.loading;
+    },
   },
   mutations: {
-    setName(state, data) {
-      this.state.name = data;
+    setNameAndEmail(state, { name, email }) {
+      state.name = name;
+      state.email = email;
     },
-    setEmail(state, data) {
-      this.state.email = data;
+    setLoading(state, data) {
+      state.loading = data;
+    },
+    setUserId(state, data) {
+      state.uid = data;
+    },
+    beforeAuth(state) {
+      state.loading = true;
+    },
+    afterSuccessfulAuth(state, { name, email, uid }) {
+      state.loading = false;
+      state.name = name;
+      state.email = email;
+      state.uid = uid;
+    },
+    afterErrorAuth(state) {
+      state.loading = false;
     },
   },
   actions: {
-    submitDataToFireBase({ commit }, payload) {
-      // lets commit the payload
-      commit('setName', payload.name);
-      commit('setEmail', payload.email);
-      // lets send to the firebase database.
-      firebase.database().ref('users/').push().set({
-        name: payload.name,
-        email: payload.email,
+    createNewUserAccount({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        commit('beforeAuth');
+        // create new account.
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(payload.email, payload.password)
+          .then((response) => {
+            commit('afterSuccessfulAuth', {
+              uid: response.uid,
+              ...payload,
+            });
+            resolve();
+          })
+          .catch((error) => {
+            // Handle Errors here.
+            commit('afterErrorAuth');
+            reject(error.message);
+          });
       });
+    },
+    signInExistingUser({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true);
+        // Sign-in the user details.
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(payload.email, payload.password)
+          .then((response) => {
+            commit('afterSuccessfulAuth', {
+              uid: response.uid,
+              ...payload,
+            });
+            resolve();
+          })
+          .catch((error) => {
+            // Handle Errors here.
+            commit('afterErrorAuth');
+            reject(error.message);
+          });
+      });
+    },
+    signOutExistingUser({ commit }, payload) {
+
     },
   },
 });
