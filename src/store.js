@@ -10,10 +10,14 @@ export default new Vuex.Store({
     email: '',
     loading: false,
     uid: '',
+    todoList: [],
   },
   getters: {
     getLoading(state) {
       return state.loading;
+    },
+    getCurrentLoggedInUserId(state) {
+      return state.uid;
     },
   },
   mutations: {
@@ -26,6 +30,9 @@ export default new Vuex.Store({
     },
     setUserId(state, data) {
       state.uid = data;
+    },
+    setTodoList(state, data) {
+      state.todoList = data;
     },
     beforeAuth(state) {
       state.loading = true;
@@ -81,6 +88,22 @@ export default new Vuex.Store({
             commit('afterErrorAuth');
             reject(error.message);
           });
+      });
+    },
+    submitTodoToFirebase({ commit, state }, payload) {
+      commit('setLoading', true);
+      firebase
+        .database()
+        .ref(`todo-list/${state.uid}`)
+        .push(payload)
+        .then(() => commit('setLoading', false));
+    },
+    getAllTodosForUser({commit, state}) {
+      let todoList = firebase
+          .database()
+          .ref(`todo-list/${state.uid}`);
+      todoList.on('value', function (data) {
+         commit('setTodoList', data.val());
       });
     },
     signOutExistingUser({ commit }, payload) {

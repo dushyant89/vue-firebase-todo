@@ -82,18 +82,18 @@ export default {
       return this.createNewUserAccount(payload);
     },
     loginOrRegister() {
-      let promise;
+      let promise,
+        loginPayload = {
+          email: this.email,
+          password: this.password,
+        };
       if (this.newUser) {
         promise = this.register({
           name: this.name,
-          email: this.email,
-          password: this.password,
+          ...loginPayload,
         });
       } else {
-        promise = this.login({
-          email: this.email,
-          password: this.password,
-        });
+        promise = this.login(loginPayload);
       }
 
       promise.then(() => this.$router.push('/'))
