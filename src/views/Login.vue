@@ -3,7 +3,7 @@
         <v-alert v-model="error" dismissible type="error">
             {{ error }}
         </v-alert>
-        <v-form v-model="valid">
+        <v-form v-model="valid" method="post" @submit.prevent="loginOrRegister">
             <v-checkbox
                     color="green"
                     label="New user ?"
@@ -28,14 +28,13 @@
                     :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
                     :append-icon-cb="() => (passwordVisible = !passwordVisible)"
                     :type="passwordVisible ? 'text' : 'password'"
+                    :rules="passwordRules"
                     name="input-10-1"
                     label="Enter your password"
-                    hint="At least 8 characters"
-                    min="8"
-                    counter
                     required
             ></v-text-field>
             <v-btn
+                    type="submit"
                     color="success"
                     :disabled="!valid"
                     :loading="loading"
@@ -50,61 +49,65 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  data: () => ({
-    valid: false,
-    name: '',
-    nameRules: [
-      v => !!v || 'Name is required',
-      // @TODO: store the length
-      v => v.length <= 20 || 'Name must be less than 20 characters',
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-    ],
-    password: '',
-    passwordVisible: false,
-    // by default we show the login screen
-    newUser: false,
-    error: '',
-  }),
-  computed: {
-    ...mapGetters({
-      loading: 'getLoading',
+    data: () => ({
+        valid: false,
+        name: '',
+        nameRules: [
+            v => !!v || 'Name is required',
+            // @TODO: store the length
+            v => v.length <= 20 || 'Name must be less than 20 characters',
+        ],
+        email: '',
+        emailRules: [
+            v => !!v || 'E-mail is required',
+            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
+        ],
+        password: '',
+        passwordRules: [
+            v => !!v || 'Password is required',
+            v => v.length >= 8 || 'Password must be atleast 8 characters',
+        ],
+        passwordVisible: false,
+        // by default we show the login screen
+        newUser: false,
+        error: '',
     }),
-  },
-  methods: {
-    login(payload) {
-      return this.signInExistingUser(payload);
+    computed: {
+        ...mapGetters({
+            loading: 'getLoading',
+        }),
     },
-    register(payload) {
-      return this.createNewUserAccount(payload);
-    },
-    loginOrRegister() {
-      let promise,
-        loginPayload = {
-          email: this.email,
-          password: this.password,
-        };
-      if (this.newUser) {
-        promise = this.register({
-          name: this.name,
-          ...loginPayload,
-        });
-      } else {
-        promise = this.login(loginPayload);
-      }
+    methods: {
+        login(payload) {
+            return this.signInExistingUser(payload);
+        },
+        register(payload) {
+            return this.createNewUserAccount(payload);
+        },
+        loginOrRegister() {
+            let promise,
+                loginPayload = {
+                    email: this.email,
+                    password: this.password,
+                };
+            if (this.newUser) {
+                promise = this.register({
+                    name: this.name,
+                    ...loginPayload,
+                });
+            } else {
+                promise = this.login(loginPayload);
+            }
 
-      promise.then(() => this.$router.push('/'))
-        .catch((error) => {
-          this.error = error;
-        });
+            promise.then(() => this.$router.push('/'))
+                .catch((error) => {
+                    this.error = error;
+                });
+        },
+        ...mapActions([
+            'createNewUserAccount',
+            'signInExistingUser',
+        ]),
     },
-    ...mapActions([
-      'createNewUserAccount',
-      'signInExistingUser',
-    ]),
-  },
 };
 </script>
