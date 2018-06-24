@@ -33,33 +33,55 @@
                     <template v-else>
                         <v-list>
                             <v-subheader class="headline"> Marked </v-subheader>
-                            <v-list-tile
-                                class="pl-2"
-                                :key="item.todoId"
-                                v-for="item in markedTodos">
-                                <v-list-tile-content>
-                                    <v-list-tile-title>
-                                        {{ item.todo }}
-                                    </v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-                        </v-list>
-                        <v-divider></v-divider>
-                        <v-list>
-                            <v-subheader class="headline"> Recent </v-subheader>
+                            <template v-if="markedTodos.length">
                                 <v-list-tile
                                     class="pl-2"
                                     :key="item.todoId"
-                                    v-for="item in uncheckedTodos">
+                                    v-for="item in markedTodos">
                                     <v-list-tile-content>
                                         <v-list-tile-title>
                                             {{ item.todo }}
                                         </v-list-tile-title>
                                     </v-list-tile-content>
-                                    <v-list-tile-action>
-                                        <v-checkbox v-model="item.checked"></v-checkbox>
-                                    </v-list-tile-action>
                                 </v-list-tile>
+                            </template>
+                            <template v-else>
+                                <v-list-tile class="pl-2">
+                                    <v-list-tile-content>
+                                        <v-alert :value="true" outline color="warning" icon="info">
+                                            No marked todos
+                                        </v-alert>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </template>
+                        </v-list>
+                        <v-divider></v-divider>
+                        <v-list>
+                            <v-subheader class="headline"> Recent </v-subheader>
+                                <template v-if="uncheckedTodos.length">
+                                    <v-list-tile
+                                        class="pl-2"
+                                        :key="item.todoId"
+                                        v-for="item in uncheckedTodos">
+                                        <v-list-tile-content>
+                                            <v-list-tile-title>
+                                                {{ item.todo }}
+                                            </v-list-tile-title>
+                                        </v-list-tile-content>
+                                        <v-list-tile-action>
+                                            <v-checkbox v-model="item.checked"></v-checkbox>
+                                        </v-list-tile-action>
+                                    </v-list-tile>
+                                </template>
+                                <template v-else>
+                                    <v-list-tile>
+                                        <v-list-tile-content>
+                                            <v-alert :value="true" outline color="warning" icon="info">
+                                                No recent todos
+                                            </v-alert>
+                                        </v-list-tile-content>
+                                    </v-list-tile>
+                                </template>
                         </v-list>
                     </template>
                     <v-card-actions>
