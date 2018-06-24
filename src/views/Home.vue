@@ -33,7 +33,10 @@
                     <template v-else>
                         <v-list>
                             <v-subheader class="headline"> Marked </v-subheader>
-                            <v-list-tile class="pl-2" :key="item.todoId" v-for="item in markedTodos">
+                            <v-list-tile
+                                class="pl-2"
+                                :key="item.todoId"
+                                v-for="item in markedTodos">
                                 <v-list-tile-content>
                                     <v-list-tile-title>
                                         {{ item.todo }}
@@ -44,7 +47,10 @@
                         <v-divider></v-divider>
                         <v-list>
                             <v-subheader class="headline"> Recent </v-subheader>
-                                <v-list-tile class="pl-2" :key="item.todoId" v-for="item in uncheckedTodos">
+                                <v-list-tile
+                                    class="pl-2"
+                                    :key="item.todoId"
+                                    v-for="item in uncheckedTodos">
                                     <v-list-tile-content>
                                         <v-list-tile-title>
                                             {{ item.todo }}
@@ -61,8 +67,7 @@
                             @click="markAsDone"
                             :disabled="checkedTodos.length < 1"
                             :loading="markTodosAsDoneLoading"
-                            color="success"
-                        >
+                            color="success">
                             Mark {{ checkedTodos.length > 0 ? checkedTodos.length: '' }} as done
                         </v-btn>
                     </v-card-actions>
@@ -100,7 +105,9 @@ export default {
                 todo: this.newTodo,
                 checked: false,
             })
-                .then(() => this.newTodo = '');
+                .then(() => {
+                    this.newTodo = '';
+                });
         },
         markAsDone() {
             this.markTodosAsDone(this.checkedTodos);

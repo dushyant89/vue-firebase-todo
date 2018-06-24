@@ -80,7 +80,7 @@ export default new Vuex.Store({
              * */
             state.markedTodos = [];
             state.uncheckedTodos = [];
-            for (let todoId in data) {
+            for (const todoId in data) {
                 if (data[todoId].checked) {
                     state.markedTodos.push({
                         todoId,
@@ -151,7 +151,7 @@ export default new Vuex.Store({
             });
         },
         submitTodoToFirebase({ commit, state }, payload) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 commit('setNewTodoLoading', true);
                 firebase
                     .database()
@@ -187,7 +187,7 @@ export default new Vuex.Store({
         },
         markTodosAsDone({ commit, state }, payload) {
             commit('setMarkTodosAsDoneLoading', true);
-            let updates = {};
+            const updates = {};
             payload.forEach((item) => {
                 updates[`/${item.todoId}/checked`] = true;
             });

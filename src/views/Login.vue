@@ -6,7 +6,7 @@
         <v-card>
             <v-toolbar color="light-green" dark>
                 <v-toolbar-title>
-                    Vue-Firebase TODO App
+                    Vue-Firebase Todo App
                 </v-toolbar-title>
             </v-toolbar>
             <v-card-text>
@@ -92,11 +92,11 @@ export default {
             return this.createNewUserAccount(payload);
         },
         loginOrRegister() {
-            let promise,
-                loginPayload = {
-                    email: this.email,
-                    password: this.password,
-                };
+            let promise;
+            const loginPayload = {
+                email: this.email,
+                password: this.password,
+            };
             if (this.newUser) {
                 promise = this.register({
                     name: this.name,
@@ -108,7 +108,9 @@ export default {
 
             promise
                 .then(() => this.$router.push('/'))
-                .catch((error) => this.error = error);
+                .catch((error) => {
+                    this.error = error;
+                });
         },
         ...mapActions([
             'createNewUserAccount',
