@@ -6,12 +6,12 @@ Vue.use(Vuex);
 
 // firebase config.
 firebase.initializeApp({
-    apiKey: 'AIzaSyBKh8344Qf7jTeFQtNHzINghYFVhD2K3fU',
-    authDomain: 'dush-firebase.firebaseapp.com',
-    databaseURL: 'https://dush-firebase.firebaseio.com',
-    projectId: 'dush-firebase',
-    storageBucket: 'dush-firebase.appspot.com',
-    messagingSenderId: '933956829731',
+    apiKey: 'YOUR_FIREBASE_API_KEY',
+    authDomain: 'YOUR_FIREBASE_AUTH_DOMAIN',
+    databaseURL: 'YOUR_FIREBASE_DATABASE_URL',
+    projectId: 'PROJECT_ID',
+    storageBucket: 'STORAGE_BUCKET',
+    messagingSenderId: 'MESSAGE_SENDER_ID',
 });
 
 const DATABASE = 'todo-list';
