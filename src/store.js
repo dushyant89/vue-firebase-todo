@@ -14,20 +14,43 @@ firebase.initializeApp({
     messagingSenderId: '933956829731',
 });
 
+const DATABASE = 'todo-list';
+
 export default new Vuex.Store({
     state: {
         name: '',
         email: '',
-        loading: false,
+        loadings: {
+            login: false,
+            newTodo: false,
+            markTodosAsDone: false,
+            getAllTodos: false,
+        },
         uid: '',
-        todoList: [],
+        uncheckedTodos: [],
+        markedTodos: [],
     },
     getters: {
-        getLoading(state) {
-            return state.loading;
+        loginLoading(state) {
+            return state.loadings.login;
+        },
+        newTodoLoading(state) {
+            return state.loadings.newTodo;
+        },
+        markTodosAsDoneLoading(state) {
+            return state.loadings.markTodosAsDone;
+        },
+        getAllTodosLoading(state) {
+            return state.loadings.getAllTodos;
         },
         getCurrentLoggedInUserId(state) {
             return state.uid;
+        },
+        getUnCheckedTodos(state) {
+            return state.uncheckedTodos;
+        },
+        getTodosMarkedAsDone(state) {
+            return state.markedTodos;
         },
     },
     mutations: {
@@ -35,26 +58,53 @@ export default new Vuex.Store({
             state.name = name;
             state.email = email;
         },
-        setLoading(state, data) {
-            state.loading = data;
+        setLoginLoading(state, data) {
+            state.loadings.login = data;
+        },
+        setNewTodoLoading(state, data) {
+            state.loadings.newTodo = data;
+        },
+        setMarkTodosAsDoneLoading(state, data) {
+            state.loadings.markTodosAsDone = data;
+        },
+        setAllTodosLoading(state, data) {
+            state.loadings.getAllTodos = data;
         },
         setUserId(state, data) {
             state.uid = data;
         },
         setTodoList(state, data) {
-            state.todoList = data;
+            /**
+             * The structure should be like
+             * { todoId, todo, checked }
+             * */
+            state.markedTodos = [];
+            state.uncheckedTodos = [];
+            for (let todoId in data) {
+                if (data[todoId].checked) {
+                    state.markedTodos.push({
+                        todoId,
+                        ...data[todoId],
+                    });
+                } else {
+                    state.uncheckedTodos.push({
+                        todoId,
+                        ...data[todoId],
+                    });
+                }
+            }
         },
         beforeAuth(state) {
-            state.loading = true;
+            state.loadings.login = true;
         },
         afterSuccessfulAuth(state, { name, email, uid }) {
-            state.loading = false;
+            state.loadings.login = false;
             state.name = name;
             state.email = email;
             state.uid = uid;
         },
         afterErrorAuth(state) {
-            state.loading = false;
+            state.loadings.login = false;
         },
     },
     actions: {
@@ -81,7 +131,7 @@ export default new Vuex.Store({
         },
         signInExistingUser({ commit }, payload) {
             return new Promise((resolve, reject) => {
-                commit('setLoading', true);
+                commit('beforeAuth');
                 // Sign-in the user details.
                 firebase
                     .auth()
@@ -102,28 +152,31 @@ export default new Vuex.Store({
         },
         submitTodoToFirebase({ commit, state }, payload) {
             return new Promise((resolve, reject) => {
-                commit('setLoading', true);
+                commit('setNewTodoLoading', true);
                 firebase
                     .database()
-                    .ref(`todo-list/${state.uid}`)
+                    .ref(`${DATABASE}/${state.uid}`)
                     .push(payload)
                     .then(() => {
-                        commit('setLoading', false);
+                        commit('setNewTodoLoading', false);
                         resolve();
                     });
             });
         },
         getAllTodosForUser({ commit, state }) {
+            commit('setAllTodosLoading', true);
             const todoList = firebase
                 .database()
-                .ref(`todo-list/${state.uid}`);
+                .ref(`${DATABASE}/${state.uid}`);
             todoList.on('value', (data) => {
                 commit('setTodoList', data.val());
+                commit('setAllTodosLoading', false);
             });
         },
         getCurrentUser({ commit }) {
             return new Promise((resolve, reject) => {
-                let user = firebase.auth().currentUser;
+                const user = firebase.auth().currentUser;
+                // if there is a logged in user.
                 if (user) {
                     commit('setUserId', user.uid);
                     resolve();
@@ -131,6 +184,18 @@ export default new Vuex.Store({
                     reject();
                 }
             });
+        },
+        markTodosAsDone({ commit, state }, payload) {
+            commit('setMarkTodosAsDoneLoading', true);
+            let updates = {};
+            payload.forEach((item) => {
+                updates[`/${item.todoId}/checked`] = true;
+            });
+            firebase
+                .database()
+                .ref(`${DATABASE}/${state.uid}`)
+                .update(updates)
+                .then(() => commit('setMarkTodosAsDoneLoading', false));
         },
     },
 });

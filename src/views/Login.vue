@@ -3,45 +3,54 @@
         <v-alert v-model="error" dismissible type="error">
             {{ error }}
         </v-alert>
-        <v-form v-model="valid" method="post" @submit.prevent="loginOrRegister">
-            <v-checkbox
-                    color="green"
-                    label="New user ?"
-                    v-model="newUser"
-            ></v-checkbox>
-            <v-text-field
-                    v-if="newUser"
-                    v-model="name"
-                    :rules="nameRules"
-                    :counter="10"
-                    label="Name"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    label="E-mail"
-                    required
-            ></v-text-field>
-            <v-text-field
-                    v-model="password"
-                    :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
-                    :append-icon-cb="() => (passwordVisible = !passwordVisible)"
-                    :type="passwordVisible ? 'text' : 'password'"
-                    :rules="passwordRules"
-                    name="input-10-1"
-                    label="Enter your password"
-                    required
-            ></v-text-field>
-            <v-btn
-                    type="submit"
-                    color="success"
-                    :disabled="!valid"
-                    :loading="loading"
-                    @click="loginOrRegister">
-                {{ newUser? 'Register' : 'Login' }}
-            </v-btn>
-        </v-form>
+        <v-card>
+            <v-toolbar color="light-green" dark>
+                <v-toolbar-title>
+                    Vue-Firebase TODO App
+                </v-toolbar-title>
+            </v-toolbar>
+            <v-card-text>
+                <v-form v-model="valid" method="post" @submit.prevent="loginOrRegister">
+                    <v-checkbox
+                        color="green"
+                        label="New user ?"
+                        v-model="newUser"
+                    ></v-checkbox>
+                    <v-text-field
+                        v-if="newUser"
+                        v-model="name"
+                        :rules="nameRules"
+                        :counter="10"
+                        label="Name"
+                        required
+                    ></v-text-field>
+                    <v-text-field
+                        v-model="email"
+                        :rules="emailRules"
+                        label="E-mail"
+                        required
+                    ></v-text-field>
+                    <v-text-field
+                        v-model="password"
+                        :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
+                        :append-icon-cb="() => (passwordVisible = !passwordVisible)"
+                        :type="passwordVisible ? 'text' : 'password'"
+                        :rules="passwordRules"
+                        name="input-10-1"
+                        label="Enter your password"
+                        required
+                    ></v-text-field>
+                    <v-btn
+                        type="submit"
+                        color="success"
+                        :disabled="!valid"
+                        :loading="loginLoading"
+                        @click="loginOrRegister">
+                        {{ newUser? 'Register' : 'Login' }}
+                    </v-btn>
+                </v-form>
+            </v-card-text>
+        </v-card>
     </div>
 </template>
 
@@ -73,9 +82,7 @@ export default {
         error: '',
     }),
     computed: {
-        ...mapGetters({
-            loading: 'getLoading',
-        }),
+        ...mapGetters(['loginLoading']),
     },
     methods: {
         login(payload) {
@@ -99,10 +106,9 @@ export default {
                 promise = this.login(loginPayload);
             }
 
-            promise.then(() => this.$router.push('/'))
-                .catch((error) => {
-                    this.error = error;
-                });
+            promise
+                .then(() => this.$router.push('/'))
+                .catch((error) => this.error = error);
         },
         ...mapActions([
             'createNewUserAccount',
