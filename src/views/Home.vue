@@ -2,17 +2,19 @@
     <div>
         <v-layout row>
             <v-flex xs12 sm6>
-                <v-form>
+                <v-form v-model="valid" @submit.prevent="submitTodo">
                     <v-layout row>
                         <v-text-field
                             v-model="newTodo"
                             label="Your new todo"
                             hint="I will get better at work"
+                            :rules="newTodoRules"
                             required>
                         </v-text-field>
                         <v-btn
                             color="success"
                             :loading="newTodoLoading"
+                            :disabled="!valid"
                             @click="submitTodo">
                             Submit
                             <v-icon right>send</v-icon>
@@ -115,6 +117,10 @@ export default {
     },
     data: () => ({
         newTodo: '',
+        valid: false,
+        newTodoRules: [
+            v => !!v || 'New todo is required',
+        ],
     }),
     computed: {
         checkedTodos() {
