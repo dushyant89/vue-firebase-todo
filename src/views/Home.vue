@@ -43,6 +43,13 @@
                                             {{ item.todo }}
                                         </v-list-tile-title>
                                     </v-list-tile-content>
+                                    <v-list-tile-action>
+                                        <v-btn
+                                                @click="deleteTodo(item)"
+                                                :loading="deleteTodoLoading" flat icon>
+                                            <v-icon>delete_outline</v-icon>
+                                        </v-btn>
+                                    </v-list-tile-action>
                                 </v-list-tile>
                             </template>
                             <template v-else>
@@ -100,7 +107,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
     created() {
@@ -120,6 +127,9 @@ export default {
             uncheckedTodos: 'getUnCheckedTodos',
             markedTodos: 'getTodosMarkedAsDone',
         }),
+        ...mapState({
+            deleteTodoLoading: state => state.loadings.deletingTodo,
+        }),
     },
     methods: {
         submitTodo() {
@@ -138,6 +148,7 @@ export default {
             'submitTodoToFirebase',
             'getAllTodosForUser',
             'markTodosAsDone',
+            'deleteTodo',
         ]),
     },
 };

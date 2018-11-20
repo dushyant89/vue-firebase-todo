@@ -25,6 +25,7 @@ export default new Vuex.Store({
             newTodo: false,
             markTodosAsDone: false,
             getAllTodos: false,
+            deletingTodo: false,
         },
         uid: '',
         uncheckedTodos: [],
@@ -66,6 +67,9 @@ export default new Vuex.Store({
         },
         setMarkTodosAsDoneLoading(state, data) {
             state.loadings.markTodosAsDone = data;
+        },
+        setDeleteTodoLoading(state, data) {
+            state.loadings.deletingTodo = data;
         },
         setAllTodosLoading(state, data) {
             state.loadings.getAllTodos = data;
@@ -197,5 +201,15 @@ export default new Vuex.Store({
                 .update(updates)
                 .then(() => commit('setMarkTodosAsDoneLoading', false));
         },
+        deleteTodo({ commit, state }, payload) {
+            commit('setDeleteTodoLoading', true);
+            const updates = {};
+            updates[`/${payload.todoId}/`] = null;
+            firebase
+                .database()
+                .ref(`${DATABASE}/${state.uid}`)
+                .update(updates)
+                .then(() => commit('setDeleteTodoLoading', false));
+        }
     },
 });
