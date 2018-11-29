@@ -33,37 +33,7 @@ export default new Vuex.Store({
         uncheckedTodos: [],
         markedTodos: [],
     },
-    getters: {
-        loginLoading(state) {
-            return state.loadings.login;
-        },
-        newTodoLoading(state) {
-            return state.loadings.newTodo;
-        },
-        markTodosAsDoneLoading(state) {
-            return state.loadings.markTodosAsDone;
-        },
-        getAllTodosLoading(state) {
-            return state.loadings.getAllTodos;
-        },
-        getCurrentLoggedInUserId(state) {
-            return state.uid;
-        },
-        getUnCheckedTodos(state) {
-            return state.uncheckedTodos;
-        },
-        getTodosMarkedAsDone(state) {
-            return state.markedTodos;
-        },
-    },
     mutations: {
-        setNameAndEmail(state, { name, email }) {
-            state.name = name;
-            state.email = email;
-        },
-        setLoginLoading(state, data) {
-            state.loadings.login = data;
-        },
         setNewTodoLoading(state, data) {
             state.loadings.newTodo = data;
         },

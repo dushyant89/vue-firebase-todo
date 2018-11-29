@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
     data: () => ({
@@ -81,9 +81,9 @@ export default {
         newUser: false,
         error: '',
     }),
-    computed: {
-        ...mapGetters(['loginLoading']),
-    },
+    computed: mapState({
+        loginLoading: state => state.loadings.login,
+    }),
     methods: {
         login(payload) {
             return this.signInExistingUser(payload);

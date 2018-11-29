@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
     created() {
@@ -126,15 +126,13 @@ export default {
         checkedTodos() {
             return this.uncheckedTodos.filter(todo => todo.checked);
         },
-        ...mapGetters({
-            newTodoLoading: 'newTodoLoading',
-            markTodosAsDoneLoading: 'markTodosAsDoneLoading',
-            getAllTodosLoading: 'getAllTodosLoading',
-            uncheckedTodos: 'getUnCheckedTodos',
-            markedTodos: 'getTodosMarkedAsDone',
-        }),
         ...mapState({
+            newTodoLoading: state => state.loadings.newTodo,
+            markTodosAsDoneLoading: state => state.loadings.markTodosAsDone,
+            getAllTodosLoading: state => state.loadings.getAllTodos,
             deleteTodoLoading: state => state.loadings.deletingTodo,
+            uncheckedTodos: 'uncheckedTodos',
+            markedTodos: 'markedTodos',
         }),
     },
     methods: {
