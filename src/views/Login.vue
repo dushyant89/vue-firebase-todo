@@ -33,7 +33,7 @@
                     <v-text-field
                         v-model="password"
                         :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
-                        :append-icon-cb="() => (passwordVisible = !passwordVisible)"
+                        @click:append="() => (passwordVisible = !passwordVisible)"
                         :type="passwordVisible ? 'text' : 'password'"
                         :rules="passwordRules"
                         name="input-10-1"
