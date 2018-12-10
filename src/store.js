@@ -183,6 +183,6 @@ export default new Vuex.Store({
                 .ref(`${DATABASE}/${state.uid}`)
                 .update(updates)
                 .then(() => commit('setDeleteTodoLoading', false));
-        }
+        },
     },
 });
