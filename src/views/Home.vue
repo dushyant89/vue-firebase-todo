@@ -7,7 +7,6 @@
                         <v-text-field
                             v-model="newTodo"
                             label="Your new todo"
-                            hint="I will get better at work"
                             :rules="newTodoRules"
                             required>
                         </v-text-field>
@@ -34,31 +33,31 @@
                     </template>
                     <template v-else>
                         <v-list>
-                            <v-subheader class="headline"> Marked </v-subheader>
+                            <v-subheader class="headline"> Completed </v-subheader>
                             <template v-if="markedTodos.length">
                                 <v-list-tile
                                     class="pl-2"
                                     :key="item.todoId"
                                     v-for="item in markedTodos">
+                                    <v-list-tile-action>
+                                        <v-btn
+                                            @click="deleteTodo(item)"
+                                            :loading="deleteTodoLoading" flat icon>
+                                            <v-icon>delete_outline</v-icon>
+                                        </v-btn>
+                                    </v-list-tile-action>
                                     <v-list-tile-content>
                                         <v-list-tile-title>
                                             {{ item.todo }}
                                         </v-list-tile-title>
                                     </v-list-tile-content>
-                                    <v-list-tile-action>
-                                        <v-btn
-                                                @click="deleteTodo(item)"
-                                                :loading="deleteTodoLoading" flat icon>
-                                            <v-icon>delete_outline</v-icon>
-                                        </v-btn>
-                                    </v-list-tile-action>
                                 </v-list-tile>
                             </template>
                             <template v-else>
                                 <v-list-tile class="pl-2">
                                     <v-list-tile-content>
                                         <v-alert :value="true" outline color="warning" icon="info">
-                                            No marked todos
+                                            No completed todos
                                         </v-alert>
                                     </v-list-tile-content>
                                 </v-list-tile>
@@ -72,14 +71,14 @@
                                         class="pl-2"
                                         :key="item.todoId"
                                         v-for="item in uncheckedTodos">
+                                        <v-list-tile-action>
+                                            <v-checkbox v-model="item.checked"></v-checkbox>
+                                        </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>
                                                 {{ item.todo }}
                                             </v-list-tile-title>
                                         </v-list-tile-content>
-                                        <v-list-tile-action>
-                                            <v-checkbox v-model="item.checked"></v-checkbox>
-                                        </v-list-tile-action>
                                     </v-list-tile>
                                 </template>
                                 <template v-else>
