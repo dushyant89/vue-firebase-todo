@@ -56,20 +56,23 @@ export default new Vuex.Store({
              * */
             state.markedTodos = [];
             state.uncheckedTodos = [];
-            const todoIds = Object.keys(data);
-            todoIds.forEach((todoId) => {
-                if (data[todoId].checked) {
-                    state.markedTodos.push({
-                        todoId,
-                        ...data[todoId],
-                    });
-                } else {
-                    state.uncheckedTodos.push({
-                        todoId,
-                        ...data[todoId],
-                    });
-                }
-            });
+            // Initially there will be no todo-list.
+            if (data) {
+                const todoIds = Object.keys(data);
+                todoIds.forEach((todoId) => {
+                    if (data[todoId].checked) {
+                        state.markedTodos.push({
+                            todoId,
+                            ...data[todoId],
+                        });
+                    } else {
+                        state.uncheckedTodos.push({
+                            todoId,
+                            ...data[todoId],
+                        });
+                    }
+                });
+            }
         },
         beforeAuth(state) {
             state.loadings.login = true;
