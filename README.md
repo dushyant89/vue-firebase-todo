@@ -20,4 +20,9 @@ STORAGE_BUCKET
 MESSAGING_SENDER_ID
 ```
 
+## TODOs
+
+* Add unit tests using [Jest](https://jestjs.io/docs/en/getting-started)
+* Set up a build pipeline and continuous deployment on heroku (may be)
+
 More details about the project can be found at this [Blog](https://medium.com/@dushyantsabharwal/https-medium-com-dushyantsabharwal-realtime-app-with-vue-firebase-vuetify-474cdaa895fa) post.
