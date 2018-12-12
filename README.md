@@ -19,3 +19,5 @@ PROJECT_ID
 STORAGE_BUCKET
 MESSAGING_SENDER_ID
 ```
+
+[Blog](https://medium.com/@dushyantsabharwal/https-medium-com-dushyantsabharwal-realtime-app-with-vue-firebase-vuetify-474cdaa895fa)
