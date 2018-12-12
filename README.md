@@ -10,4 +10,12 @@ The purpose of the app is to serve as an example for a project which needs to ex
 * Run `npm install`, which will install the dependencies
 * Run `npm serve` to play around.
 
-**Note**: Please create a `.env.local` file, with your firebase credentials and keys, in the root directory of the project and then run `npm serve`.
+**Note**: Please create a `.env.local` file, with the below credentials and keys, in the root directory of the project and then run `npm serve`.
+```
+API_KEY
+AUTH_DOMAIN
+DB_URL
+PROJECT_ID
+STORAGE_BUCKET
+MESSAGING_SENDER_ID
+```
