@@ -20,4 +20,4 @@ STORAGE_BUCKET
 MESSAGING_SENDER_ID
 ```
 
-[Blog](https://medium.com/@dushyantsabharwal/https-medium-com-dushyantsabharwal-realtime-app-with-vue-firebase-vuetify-474cdaa895fa)
+More details about the project can be found at this [Blog](https://medium.com/@dushyantsabharwal/https-medium-com-dushyantsabharwal-realtime-app-with-vue-firebase-vuetify-474cdaa895fa) post.
